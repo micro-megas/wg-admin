@@ -28,7 +28,7 @@ class Peer(Base):
 class TrafficStat(Base):
     __tablename__ = "traffic_stats"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     peer_id: Mapped[str] = mapped_column(ForeignKey("peers.id", ondelete="CASCADE"))
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
