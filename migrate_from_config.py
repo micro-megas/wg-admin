@@ -47,42 +47,44 @@ def parse_wg_config(config_path: str) -> dict:
     content = Path(config_path).read_text()
 
     result = {"interface": {}, "peers": []}
+
+    pattern = re.compile(r'# BEGIN_PEER ([-\w]+)')
+    
     current_section = None
     current_peer = None
+    peer_name = None
 
     for line in content.splitlines():
-        stripped = line.strip()
+        line = line.strip()
 
         # Пропуск пустых строк
-        if not stripped:
+        if not line:
             continue
 
         # Комментарии-заголовки секций
-        if stripped.startswith("[Interface]"):
+        if line.startswith("[Interface]"):
             current_section = "interface"
             continue
-        elif stripped.startswith("[Peer]"):
+        elif line.startswith("[Peer]"):
             current_section = "peer"
             if current_peer:
                 result["peers"].append(current_peer)
             current_peer = {}
+            if peer_name:
+                current_peer['name'] = peer_name
+                peer_name = None
             continue
 
         # Обычный комментарий — может быть именем пира
-        if stripped.startswith("#") and current_section == "peer" and current_peer is not None:
-            #comment = stripped.lstrip("# BEGIN_PEER").strip()
-            pattern = r'# BEGIN_PEER ([-\w]+)|# (\w+)'
-            m = re.match(pattern, stripped)
-            comment = m.group(1) if m else None
-            if comment and "comment" not in current_peer:
-                current_peer["comment"] = comment
+        if line.startswith("# BEGIN_PEER"):
+            peer_name = re.match(pattern, line).group(1)
             continue
 
         # Парсинг ключ = значение
-        if "=" not in stripped:
+        if "=" not in line:
             continue
 
-        key, value = stripped.split("=", 1)
+        key, value = line.split("=", 1)
         key = key.strip()
         value = value.strip()
 
@@ -212,7 +214,7 @@ async def migrate(config_path: str, dry_run: bool = False):
                 skipped += 1
                 continue
 
-            name = p.get("comment") or f"Peer-{assigned_ip}"
+            name = p.get("name") or f"Peer-{assigned_ip}"
             psk = p.get("preshared_key")
 
             # Статистика из wg show
