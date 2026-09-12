@@ -152,7 +152,7 @@ async def migrate(config_path: str, dry_run: bool = False):
     # Инициализировать БД (создать таблицы если нет)
     await init_db()
 
-    async with async_session() as db: AsyncSession:
+    async with async_session() as db: #AsyncSession:
         # --- Сохранить ключ сервера ---
         server_priv = iface.get("private_key")
         if not server_priv:
@@ -161,7 +161,7 @@ async def migrate(config_path: str, dry_run: bool = False):
 
         # Вычислить публичный ключ сервера
         from app.wireguard import _run
-        server_pub = _run(["wg", "pubkey"], ) if server_priv else ""
+        erver_pub = _run(["wg", "pubkey"], input_data=server_priv) if server_priv else ""
 
         # Проверить, есть ли уже запись
         existing_key = await db.execute(

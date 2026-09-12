@@ -3,15 +3,23 @@ import ipaddress
 from app.config import settings
 
 
-def _run(cmd: list[str]) -> str:
-    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+def _run(cmd: list[str], input_data: str | None = None, timeout: int = 10) -> str:
+    """Выполнить команду, опционально передав данные на stdin."""
+    result = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        check=True,
+        input=input_data,
+        timeout=timeout,
+    )
     return result.stdout.strip()
 
 
 def generate_keypair() -> tuple[str, str]:
     """Возвращает (private_key, public_key)."""
     private = _run(["wg", "genkey"])
-    public = _run(["wg", "pubkey"], input=private)
+    public = _run(["wg", "pubkey"], input_data=private)
     return private, public
 
 
