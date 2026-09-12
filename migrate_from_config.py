@@ -70,7 +70,7 @@ def parse_wg_config(config_path: str) -> dict:
 
         # Обычный комментарий — может быть именем пира
         if stripped.startswith("#") and current_section == "peer" and current_peer is not None:
-            comment = stripped.lstrip("#").strip()
+            comment = stripped.lstrip("# BEGIN_PEER").strip()
             if "comment" not in current_peer:
                 current_peer["comment"] = comment
             continue
