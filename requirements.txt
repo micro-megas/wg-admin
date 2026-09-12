@@ -1,0 +1,9 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+sqlalchemy==2.0.35
+alembic==1.13.2
+pydantic==2.9.0
+pydantic-settings==2.5.0
+#asyncpg==0.29.0        # если PostgreSQL
+aiosqlite==0.20.0       # если SQLite
+python-dotenv==1.0.1
