@@ -161,7 +161,7 @@ async def migrate(config_path: str, dry_run: bool = False):
 
         # Вычислить публичный ключ сервера
         from app.wireguard import _run
-        erver_pub = _run(["wg", "pubkey"], input_data=server_priv) if server_priv else ""
+        server_pub = _run(["wg", "pubkey"], input_data=server_priv) if server_priv else ""
 
         # Проверить, есть ли уже запись
         existing_key = await db.execute(
