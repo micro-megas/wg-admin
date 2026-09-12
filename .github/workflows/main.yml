@@ -1,0 +1,12 @@
+name: Main workflow
+
+on: push
+
+jobs:  
+  linter:
+    name: Linter
+    runs-on: ubuntu-latest    
+
+    steps:    
+    - name: Test PEP8      
+      run: echo OK

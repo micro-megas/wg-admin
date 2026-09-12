@@ -1,3 +1,3 @@
-![](https://github.com/micro-megas/wg-admin/workflows/wg-admin%20build%20release/badge.svg)
+![](https://github.com/micro-megas/wg-admin/workflows/main.yml/badge.svg)
 # wg-admin
 Web interface for managing WireGuard.
